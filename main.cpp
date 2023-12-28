@@ -97,101 +97,155 @@ inline bool exists_test1 (const std::string& name) { // https://stackoverflow.co
 
 int main() {
     cout << "                    Etikedo v2.8" << endl;
-    cout << "           Logiciel de comptage de feuillets." << endl;
+    string lgg = "";  // Language.
+
+    ifstream fileLgg("lgg.txt", ios::in);  // What language?
+    if(!fileLgg) { // No file.
+        lgg = "fr.lgg";
+    } else {
+        while (lgg == "") {
+            getline(fileLgg, lgg);
+        }
+        fileLgg.close();
+        if (lgg == "") { // Empty file...
+            lgg = "fr.lgg";
+        }
+    }
+// clog << lgg  << endl; // Test ok.
+string howMany = "How many?";
+string tBadValue = "A good number!";
+    string unityIs = "Unité : ";
+    string inUnity = "En ";
+    string titre = "           Logiciel de comptage de feuillets.";
+    cout << titre << endl;
     cout << "" << endl;
-    cout << "Je vous donne approximativement le nombre de feuillets dans un rouleau ouvert, \nen fonction de ses dimensions." << endl;
-    cout << "C'est approximatif : \nil est possible de mesurer quelques tours de spirales en plus ou en moins." << endl;
-    cout << "Cela vous aidera pour un contexte d'inventaire. \nJ'enregistre donc le bilan dans un fichier d'inventaire." << endl;
-    cout << "Vous pouvez vous exprimer en mm, en cm ou autrement, cela n'a aucune importance,\nmais vous devrez conserver ce choix durant tout le calcul de cet objet." << endl;
+    string intro1 = "Je vous donne approximativement le nombre de feuillets dans un rouleau ouvert, \nen fonction de ses dimensions.";
+    cout << intro1 << endl;
+    string intro2 = "C'est approximatif : \nil est possible de mesurer quelques tours de spirales en plus ou en moins.";
+    cout << intro2 << endl;
+    string intro3 = "Cela vous aidera pour un contexte d'inventaire. \nJ'enregistre donc le bilan dans un fichier d'inventaire.";
+    cout << intro3 << endl;
+    string intro4 = "Vous pouvez vous exprimer en mm, en cm ou autrement, cela n'a aucune importance,\nmais vous devrez conserver ce choix durant tout le calcul de cet objet.";
+    cout << intro4 << endl;
     string nomInventaire = "";
     string nomRouleau = " ";
-    cout << "Quel est l'inventaire que je dois continuer, avec son chemin facultatif ?" << endl;
-    // cout << "(Validez un nom vide par ENTER pour quitter.) " << endl;
-    cout << "Un fichier vide de ce nom sera fait si besoin, et j\'y ajouterai l'extention \n\".txt\"." << endl;
-while (nomInventaire==""){
-        cout << "Pas de nom vide, svp." << endl;
-    getline(cin, nomInventaire);
-}
+
+    string intro5 = "Quel est l'inventaire que je dois continuer, avec son chemin facultatif ?";
+    cout << intro5 << endl;
+    string intro6 = "Un fichier vide de ce nom sera fait si besoin, et j\'y ajouterai l'extention \n\".txt\".";
+    cout << intro6 << endl;
+    string noEmpty = "Pas de nom vide, svp.";
+
+    while (nomInventaire=="") {
+        cout << noEmpty << endl;
+        getline(cin, nomInventaire);
+    }
     nomInventaire = nomInventaire + ".txt"; // si existe : lecture et non redemande !
     string remarque = " ";
     while(remarque != "") {
-        cout << "Ajoutez une ligne de remarques au fichier d'inventaire." << endl;
-        cout << "Remarques possibles : date, heure, personnes participantes, lieu..." << endl;
-        cout << "(Validez une ligne vide par ENTER pour poursuivre, sinon on vous reproposera une autre ligne de remarques.)" << endl;
+        string remark1 = "Ajoutez une ligne de remarques au fichier d'inventaire.";
+        cout << remark1 << endl;
+        string remark2 = "Remarques possibles : date, heure, personnes participantes, lieu...";
+        cout << remark2 << endl;
+        string remark3 = "(Validez une ligne vide par ENTER pour poursuivre, sinon on vous reproposera une autre ligne de remarques.)";
+        cout << remark3 << endl;
         getline(cin, remarque);
         AppendFunctionFileString(nomInventaire, remarque + "\n");
     }
     bool start = true;
     while(true) {
-       string nombreRouleau = "";
-        cout << "Nom de l\'objet, du rouleau ";
+        string nombreRouleau = "";
+        string NameRoll1 = "Nom de l\'objet, du rouleau";
+        cout << NameRoll1;
+        string next = " suivant";
         if (!start) {
-            cout << "suivant";
+            cout << next;
         }
-        cout << " ? \n(Validez un nom vide par ENTER pour quitter.) ";
+        string NameRoll2 = " ?";
+        cout << NameRoll2 << endl;
+        string emptyToQuit = "(Validez un nom vide par ENTER pour quitter.) ";
+        cout << emptyToQuit << endl;
         getline(cin, nomRouleau);
-        if (nomRouleau=="") { // ?
-            //  exit; // ??
-            break; // ??
+        if (nomRouleau=="") {
+            break;
         }
         start = false;
-        cout << "Combien de rouleaux entiers de " << nomRouleau << " avez-vous ? ";
+        string howManyRoll1 = "Combien de rouleaux entiers de ";
+        string howManyRoll2 = " avez-vous ? ";
+        cout << howManyRoll1 << nomRouleau << howManyRoll2;
         getline(cin, nombreRouleau);
-        string textNbRouleaux = "Il y a " + nombreRouleau  + " rouleaux entiers de " + nomRouleau + " ";
+        string textNbRouleaux1 = "Il y a ";
+        string textNbRouleaux2 = " rouleau(x) entier(s) de ";
+        string textNbRouleaux = textNbRouleaux1 + nombreRouleau  + textNbRouleaux2 + nomRouleau + " ";
         AppendFunctionFileString(nomInventaire, textNbRouleaux);
         string unity = "";
         float diametreVide  = 0;
         float diametrePlein = 0;
         int nombreDeFeuilletsQuandPlein = 0;
         if (!exists_test1(nomRouleau+".txt")) {
-            cout << "Je ne connais pas cet objet." << endl;
-            cout << "Quelle unité ? (cm, mm... ?) ";
+            string unknownObject = "Je ne connais pas cet objet.";
+            cout << unknownObject << endl;
+            string whatUnity = "Quelle est son unité ? (cm, mm... ?) ";
+            cout << whatUnity;
             getline(cin, unity);
             AppendFunctionFileString(nomRouleau+".txt", unity+"\n");
-            cout << "En " << unity << ", " << endl;
-            diametreVide = inputNb(1000000, 0, "Diamètre vide ?");
+
+            cout << inUnity << unity << ", ";
+            string whatIsEmptyDiameter = "quel est son diamètre vide ?";
+            diametreVide = inputNb(1000000, 0, whatIsEmptyDiameter);
             string nomRouleau_txt = nomRouleau+".txt";
             AppendFunctionFileString(nomRouleau_txt, to_string(diametreVide)+"\n");
-            cout << "En " << unity << ", " << endl;
-            diametrePlein = inputNb(1000000, diametreVide, "Diamètre plein ?");
+            cout << inUnity << unity << ", ";
+            string whatIsFullDiameter = "quel est son diamètre plein ?";
+            diametrePlein = inputNb(1000000, diametreVide, whatIsFullDiameter);
             AppendFunctionFileString(nomRouleau_txt, to_string(diametrePlein)+"\n");
-            nombreDeFeuilletsQuandPlein = inputNb(1000000, 0, "Nombre de feuillets d'un rouleau plein ?");
+            string numberFull = "Quel est le nombre de feuillets d'un rouleau plein ?";
+            nombreDeFeuilletsQuandPlein = inputNb(1000000, 0, numberFull);
             AppendFunctionFileString(nomRouleau_txt, to_string(nombreDeFeuilletsQuandPlein)+"\n");
         } else {
-            cout << "Je connais cet objet, il est ainsi :" << endl;
-ifstream fichier(nomRouleau+".txt");
-
-    if (fichier) {
- getline(fichier, unity);
-cout << "Unité : " << unity << endl;
-fichier >> diametreVide;
-cout << "Diametre vide : " << diametreVide << endl;
-fichier >> diametrePlein;
-cout << "Diametre plein : " << diametrePlein << endl;
-fichier >> nombreDeFeuilletsQuandPlein;
-cout << "Nombre de feuillets quand il est plein : " << nombreDeFeuilletsQuandPlein << endl;
-    fichier.close();
-    } else {
-        cerr << "Impossible de lire le fichier : " << nomRouleau+".txt" << ", que j\'ai pourtant détecté !" << endl;
-        cerr << "Fermez tout et recommencez !" << endl;
-    }
+            string IKnow = "Je connais cet objet, il est ainsi :";
+            cout << IKnow << endl;
+            ifstream fichier(nomRouleau+".txt");
+            if (fichier) {
+                getline(fichier, unity);
+                cout << unityIs << unity << endl;
+                fichier >> diametreVide;
+                string emptyDiameterIs = "le diamètre vide est : ";
+                cout << emptyDiameterIs << diametreVide << endl;
+                fichier >> diametrePlein;
+                string fullDiameterIs = "le diamètre plein est : ";
+                cout << fullDiameterIs << diametrePlein << endl;
+                fichier >> nombreDeFeuilletsQuandPlein;
+                string numberOfSheetsWhenFullIs = "Nombre de feuillets quand il est plein : ";
+                cout << numberOfSheetsWhenFullIs << nombreDeFeuilletsQuandPlein << endl << endl;
+                fichier.close();
+            } else {
+                string noRead = "Impossible de lire le fichier : ";
+                string detected = ", que j\'ai pourtant détecté !";
+                cerr << noRead << nomRouleau+".txt" << detected << endl;
+                string closeRestart = "Fermez tout et recommencez !";
+                cerr << closeRestart << endl;
+            }
         }
         float diametreActuel = 0;
-cout << "En " << unity << ", " << endl;
-        diametreActuel = inputNb(diametrePlein, diametreVide, "Diamètre actuel ?");
-        // Rappel de formule : surface d'un anneau en 2D : pi * (R2 ? r2)
+        cout << inUnity << unity << ", ";
+        string askDiameterNow = "quel est le diamètre actuel ?";
+        diametreActuel = inputNb(diametrePlein, diametreVide, askDiameterNow);
+        // Rappel de formule : surface d'un anneau en 2D : pi * (R^2 - r^2)
         // https://calculis.net/aire/anneau
         int nombreDeFeuilletsActuel = nombreDeFeuilletsQuandPlein * (diametreVide - diametreActuel) / (diametreVide - diametrePlein);  // Simplification des Pis ; rapport des rayons = rapport des diamètres.
-        string AfficheNombreFeuilletsActuel = "et en plus, le nombre de feuillets du rouleau partiel de ";
+        string AfficheNombreFeuilletsActuel1 = "et en plus, le nombre de feuillets du rouleau partiel de ";
         // cout << "Le nombre de feuillets de ";
         // iout (nomRouleau); // Que Linux ?
-        AfficheNombreFeuilletsActuel = AfficheNombreFeuilletsActuel + "\"" + nomRouleau + "\"";
+
 //   cout << "\"" << nomRouleau << "\"";
-        AfficheNombreFeuilletsActuel += " est d'environ : " ;
-        cout << AfficheNombreFeuilletsActuel << nombreDeFeuilletsActuel << ". " << endl;
+        string AfficheNombreFeuilletsActuel2 = " est d'environ : " ;
+        string AfficheNombreFeuilletsActuel = AfficheNombreFeuilletsActuel1 + nomRouleau + AfficheNombreFeuilletsActuel2 + to_string(nombreDeFeuilletsActuel) + ".";
+        cout << AfficheNombreFeuilletsActuel;
         AppendFunctionFileString(nomInventaire, AfficheNombreFeuilletsActuel);
-        AppendFunctionFileString(nomInventaire, to_string(nombreDeFeuilletsActuel));
-        AppendFunctionFileString(nomInventaire, ". \n");
+       // AppendFunctionFileString(nomInventaire, to_string(nombreDeFeuilletsActuel));
+        AppendFunctionFileString(nomInventaire, "\n");
+        cout << "" << endl;
     }
     return 0;
 }
